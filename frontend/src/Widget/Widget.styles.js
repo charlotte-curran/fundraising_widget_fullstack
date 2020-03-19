@@ -41,8 +41,9 @@ export const ProgressBar = styled.div`
   top: 0;
   left: 0;
   bottom: 0;
-  background-color: ${({ theme }) => theme.color.blue};
-  width: 75%;
+  background-color: ${({ theme, progress }) =>
+    progress >= 100 ? theme.color.green : theme.color.blue};
+  width: ${({ progress }) => (progress > 100 ? 100 : progress)}%;
 `;
 
 export const FundraiseForm = styled.form``;
@@ -72,6 +73,12 @@ export const NotificationSuccess = styled.div`
   ${Notification}
   border-color:${({ theme }) => theme.color.green};
   background-color: ${({ theme }) => theme.color.lightGreen};
+`;
+
+export const NotificationError = styled.div`
+  ${Notification}
+  border-color:${({ theme }) => theme.color.orange};
+  background-color: ${({ theme }) => theme.color.lightOrange};
 `;
 
 export const CloseNotification = styled.a`
