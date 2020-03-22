@@ -22,7 +22,6 @@ export const getPayments = async () => {
 
 export const postFunds = async funds => {
   const endpoint = "/payments";
-  console.log(funds);
   try {
     const res = await axios.post(endpoint, { payment: funds });
     return res;

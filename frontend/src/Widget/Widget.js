@@ -25,31 +25,29 @@ const Widget = () => {
   const [isPledgeCompleted, setIsPledgeCompleted] = useState(false);
   const [pledgeAmount, setPledgeAmount] = useState("");
   const [eventData, setEventData] = useState(null);
-  const [paymentsData, setPaymentsData] = useState(null);
   const [isGoalMet, setIsGoalMet] = useState(false);
   const [totalRaised, setTotalRaised] = useState(null);
 
   useEffect(() => {
-    getEvent().then(res => {
-      const eventData = res.data;
-      setEventData(eventData);
+    (async () => {
+      const [event, payments] = await Promise.all([getEvent(), getPayments()]);
+      setEventData(event.data);
 
-      getPayments().then(res => {
-        setPaymentsData(res.data);
-
-        const totalRaised = res.data.reduce((a, b) => {
-          return a + b;
-        }, 0);
-        setTotalRaised(totalRaised);
-
-        if (totalRaised >= eventData.goal) {
-          setIsGoalMet(true);
-        } else {
-          setIsGoalMet(false);
-        }
-      });
-    });
+      const totalRaised = payments.data.reduce((a, b) => {
+        return a + b;
+      }, 0);
+      setTotalRaised(totalRaised);
+    })();
   }, [isPledgeCompleted]);
+
+  useEffect(() => {
+    if (!totalRaised || !eventData) return;
+    if (totalRaised >= eventData.goal) {
+      setIsGoalMet(true);
+    } else {
+      setIsGoalMet(false);
+    }
+  }, [totalRaised, eventData]);
 
   const handleInputChange = e => {
     setPledgeAmount(e.target.value);
@@ -76,7 +74,7 @@ const Widget = () => {
     <Container>
       <Tooltip>
         <FundraiseRemainingText>
-          {eventData ? (totalRaised / eventData.goal) * 100 : null}%
+          {eventData ? parseInt((totalRaised / eventData.goal) * 100) : null}%
         </FundraiseRemainingText>{" "}
         of the goal funded
       </Tooltip>
