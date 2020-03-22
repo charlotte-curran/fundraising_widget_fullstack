@@ -5,4 +5,4 @@ The back end is an node app using express for routing and lowdb for data storage
 
 # Running the Project
 
-Navigate to the `/frontend` directory and run 1yarn`to install dependencies, then`yarn start`. Repeat for the`/backend` directory.
+Navigate to the `/frontend` directory and run `yarn` to install dependencies, then `yarn start`. Repeat for the`/backend` directory.
