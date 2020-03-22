@@ -15,10 +15,14 @@ export const Tooltip = styled.div`
   text-align: center;
 `;
 
+//text elements
+
 export const Text = styled.p``;
 export const FundraiseRemainingText = styled.strong``;
 export const FundraiseCurrentFundingText = styled.strong``;
 export const FundraiseGoalText = styled.strong``;
+
+//boxframe
 
 export const BoxFrame = styled.div`
   width: 250px;
@@ -29,6 +33,8 @@ export const BoxFrame = styled.div`
 export const BoxFrameContent = styled.div`
   margin: 10px;
 `;
+
+//progress bar
 
 export const ProgressBarContainer = styled.div`
   position: relative;
@@ -46,6 +52,8 @@ export const ProgressBar = styled.div`
   width: ${({ progress }) => (progress > 100 ? 100 : progress)}%;
 `;
 
+//form
+
 export const FundraiseForm = styled.form``;
 
 export const TextField = styled.input`
@@ -60,13 +68,18 @@ export const SubmitButton = styled.input`
   border: 0px;
   color: ${({ theme }) => theme.color.white};
   border-radius: 5px;
+  margin-top: 10px;
 `;
+
+//notifications
 
 const Notification = css`
   border: 1px solid;
   border-radius: 5px;
   padding: 10px;
   margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const NotificationSuccess = styled.div`
