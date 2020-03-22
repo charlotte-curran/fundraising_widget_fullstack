@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getEvent, postFunds } from "../API/";
+import { getEvent, postFunds, getPayments } from "../API/";
 import {
   Container,
   Tooltip,
@@ -25,16 +25,29 @@ const Widget = () => {
   const [isPledgeCompleted, setIsPledgeCompleted] = useState(false);
   const [pledgeAmount, setPledgeAmount] = useState("");
   const [eventData, setEventData] = useState(null);
+  const [paymentsData, setPaymentsData] = useState(null);
   const [isGoalMet, setIsGoalMet] = useState(false);
+  const [totalRaised, setTotalRaised] = useState(null);
 
   useEffect(() => {
     getEvent().then(res => {
-      setEventData(res.data);
-      if (res.data.raised >= res.data.goal) {
-        setIsGoalMet(true);
-      } else {
-        setIsGoalMet(false);
-      }
+      const eventData = res.data;
+      setEventData(eventData);
+
+      getPayments().then(res => {
+        setPaymentsData(res.data);
+
+        const totalRaised = res.data.reduce((a, b) => {
+          return a + b;
+        }, 0);
+        setTotalRaised(totalRaised);
+
+        if (totalRaised >= eventData.goal) {
+          setIsGoalMet(true);
+        } else {
+          setIsGoalMet(false);
+        }
+      });
     });
   }, [isPledgeCompleted]);
 
@@ -63,7 +76,7 @@ const Widget = () => {
     <Container>
       <Tooltip>
         <FundraiseRemainingText>
-          {eventData ? (eventData.raised / eventData.goal) * 100 : null}%
+          {eventData ? (totalRaised / eventData.goal) * 100 : null}%
         </FundraiseRemainingText>{" "}
         of the goal funded
       </Tooltip>
@@ -71,9 +84,7 @@ const Widget = () => {
       <BoxFrame>
         <ProgressBarContainer>
           <ProgressBar
-            progress={
-              eventData ? (eventData.raised / eventData.goal) * 100 : null
-            }
+            progress={eventData ? (totalRaised / eventData.goal) * 100 : null}
           />
         </ProgressBarContainer>
 
@@ -91,7 +102,7 @@ const Widget = () => {
               <Text>
                 Only 3 days left to fund this project,
                 <FundraiseCurrentFundingText>
-                  {` $${eventData ? eventData.raised : null} `}
+                  {` $${totalRaised ? totalRaised : null} `}
                 </FundraiseCurrentFundingText>
                 has been raised towards the goal to raise
                 <FundraiseGoalText>
